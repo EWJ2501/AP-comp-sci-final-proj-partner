@@ -5,21 +5,30 @@ boolean gameEnd = false;
 boolean startScreen = true;
 
 void setup () {
-    size (2560, 1600);
+    size (1440, 780);
 }
 
 void draw () {
     if (startScreen){
         background (100);
+        // start button
         rectMode(CENTER);
         strokeWeight(3);
-        rect (2560/2, 1600/2, 400, 150);
+        rect (1440/2, 780/2, 400, 150);
         strokeWeight(1);
         fill (255);
+
     } else if (!startScreen && ! gameEnd){
+        // UI
+        rectMode (CORNER);
+
 
     } else if (gameEnd){
 
     }
+
+}
+
+void mouseClicked () {
 
 }
