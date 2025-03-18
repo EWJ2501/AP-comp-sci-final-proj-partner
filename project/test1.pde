@@ -4,8 +4,9 @@ int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 
+
 void setup () {
-    size (2560, 1600);
+    size (1200, 1600, P3D);
 }
 
 void draw () {

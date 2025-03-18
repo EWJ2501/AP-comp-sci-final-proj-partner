@@ -1,8 +1,9 @@
+public class gameWorld{
 int z = 0;
 float yRotation = 0.0;
 
 void setup() {
-  size(1200, 360, P3D);
+  size(1200, 1600, P3D);
 }
 
 void draw() {
@@ -15,4 +16,5 @@ void draw() {
   stroke(255);
   box(200);
   yRotation = yRotation + 0.01;
+}
 }
