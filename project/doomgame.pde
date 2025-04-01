@@ -4,9 +4,10 @@ int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 
-int pillarCoordX[] = {0,0,0,0};
-int pillarCoordZ[] = {0,0,0,0};
-int z = -100;
+int pillarCoordX[] = {200,200,600,600};
+int pillarCoordZ[] = {200,600,600,200};
+int cameraCoord[] = {0,0,0};
+int z = 0;
 int x = 0;
 int y = 0;
 boolean Wtrue = false;
@@ -19,6 +20,11 @@ float yRotation = 0.0;
 
 void setup () {
     size (1200, 800, P3D);
+    x = 0;
+    y = 0;
+    cameraCoord[0] = (width/2);
+    cameraCoord[1] = (height/2);
+    cameraCoord[2] = (height/2);
 }
 
 
@@ -29,14 +35,16 @@ void draw () {
         lights();
         spotLight(255, 0, 0, width/2, height/2, 400, 0, 0, -1, PI/4, 2);
         movement();
-         //camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
-        rotateY(yRotation);
-        for(int i = 0; i<4; i++{
-        translate(x, height/2, z);
+        camera((width/2)+x, height/2, ((height/2)+z)/tan(PI/6), (width/2)+x, height/2, 0+z, 0, 1, 0);
+        //rotateY(yRotation);
+        //for(int i = 0; i<4; i++){
+        translate(200, height/2, 200);
         box(200);
-        })
+        translate(200, height/2, 600);
+        box(200);
+        //yRotation = yRotation + 0.01;
+        //}
         stroke(255);
-        yRotation = yRotation + 0.01;
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
