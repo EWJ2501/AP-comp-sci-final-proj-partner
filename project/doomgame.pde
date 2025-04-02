@@ -41,8 +41,9 @@ void draw () {
         background(0);
         lights();
         movement();
+        spotLight(0, 0, 0, 400, height/2, 400, 0, 0, -1, PI/4, 2);
         spotLight(255, 255, 255, xPOS, height/2, zPOS, 0, 0, -1, PI/4, 2);
-        camera(xPOS, height/2, (zPOS)/tan(PI/6), xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
+        camera(xPOS, height/2, zPOS/tan(PI/6), xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
         translate(400, height/2, 400);
         box(2000, 200, 2000);
         translate(-400, -(height/2), -400);
@@ -99,15 +100,15 @@ void movement(){
     zANGLE =(cos((ANGLE)*PI/180));
     xSpeed = round(5*xANGLE);
     zSpeed = round(5*zANGLE);
-    ANGLE=(ANGLE-90)%360;
     if(Atrue == true){
         xPOS+=xSpeed;
         zPOS+=zSpeed;
     }
     if(Dtrue == true){
         xPOS-=xSpeed;
-        zPOS=zSpeed;
+        zPOS-=zSpeed;
     }
+    ANGLE=(ANGLE-90)%360;
 }
 
 void keyPressed(){
