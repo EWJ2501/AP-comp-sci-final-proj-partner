@@ -8,7 +8,16 @@ void setup () {
     size (1440, 780);
 }
 
+void shoot(){
+    if (ammo>0){
+        ammo -= 1;
 
+    } 
+}
+
+void reloadText(){
+
+}
 
 void draw () {
     if (startScreen){
@@ -34,7 +43,7 @@ void draw () {
         // health
         rectMode (CENTER);
         fill (100);
-        rect (720, 690, 300,180);
+        rect (720, 690, 300, 180);
         textAlign (CENTER);
         textSize (50);
         fill (0);
@@ -66,7 +75,11 @@ void mouseClicked () {
 void keyPressed (){
     if (!startScreen && !gameEnd){
         if (key== ' '){
-            
+            if (ammo != 0){
+                shoot();
+            } else {
+                reloadText();
+            }
         }
     }
 }

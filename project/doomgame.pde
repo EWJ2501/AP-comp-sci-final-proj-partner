@@ -4,7 +4,7 @@ int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 //PVector
-
+PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,800,800};
 int pillarCoordZ[] = {0,800,800,0};
 //int cameraCoord[] = {0,0,0};
@@ -32,6 +32,7 @@ void setup () {
     size (1200, 800, P3D);
     xPOS = 0;
     zPOS = height/2;
+    baseMat = getMatrix(baseMat);
 }
 
 
