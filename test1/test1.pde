@@ -5,7 +5,7 @@ boolean gameEnd = false;
 boolean startScreen = false;
 
 void setup () {
-    size (1440, 780);
+    size (1200, 780);
 }
 
 void shoot(){

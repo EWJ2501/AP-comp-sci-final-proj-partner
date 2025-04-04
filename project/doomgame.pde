@@ -7,6 +7,8 @@ boolean startScreen = true;
 PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,800,800};
 int pillarCoordZ[] = {0,800,800,0};
+int enemyCoordX[] = {200,500,500,200};
+int enemyCoordZ[] = {200,200,500,500};
 //int cameraCoord[] = {0,0,0};
 float zPOS = 0;
 float xPOS = 0;
@@ -29,13 +31,25 @@ int vector = 170;
 
 
 void setup () {
-    size (1200, 800, P3D);
+    size (1200, 780, P3D);
     xPOS = 0;
     zPOS = height/2;
     baseMat = getMatrix(baseMat);
 }
 
+void makeEnemy (int xPos, int zPos){
+    fill (255, 0, 0);
+    translate (xPos, height/2+25, zPos);
+    box (50, 150, 50);
+    translate(-xPos, -(height/2+25), -zPos);
+}
 
+void makeEnemies (){
+    for (int i=0; i<3; i++){
+        makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
+    }
+    fill (100);
+}
 
 void draw () {
     if (startScreen){
@@ -57,6 +71,7 @@ void draw () {
         // box(20);
         // translate(-(xPOS+(30.0*xANGLE)), -height/2, -(zPOS+(30.0*zANGLE)));
         stroke(255);
+        makeEnemies();
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
