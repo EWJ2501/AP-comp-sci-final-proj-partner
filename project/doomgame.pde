@@ -7,8 +7,8 @@ boolean startScreen = true;
 PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,800,800};
 int pillarCoordZ[] = {0,800,800,0};
-int enemyCoordX[] = {200,500,500,200};
-int enemyCoordZ[] = {200,200,500,500};
+int enemyCoordX[] = {-420,940,800,0};
+int enemyCoordZ[] = {-500,60,640,1200};
 //int cameraCoord[] = {0,0,0};
 float zPOS = 0;
 float xPOS = 0;
@@ -40,12 +40,12 @@ void setup () {
 void makeEnemy (int xPos, int zPos){
     fill (255, 0, 0);
     translate (xPos, height/2+25, zPos);
-    box (50, 150, 50);
+    box (65, 150, 65);
     translate(-xPos, -(height/2+25), -zPos);
 }
 
 void makeEnemies (){
-    for (int i=0; i<3; i++){
+    for (int i=0; i<4; i++){
         makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
     }
     fill (100);
@@ -60,8 +60,10 @@ void draw () {
         spotLight(220,220,220,xPOS, height/2, zPOS,xPOS+xVector, height/2, zPOS+zVector, PI/3, 1);
         camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
         translate(400, height/2, 400);
+        fill (0,60,0);
         box(2000, 200, 2000);
         translate(-400, -(height/2), -400);
+        fill (60);
         for(int i = 0; i<4; i++){
         translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
         box(200);
