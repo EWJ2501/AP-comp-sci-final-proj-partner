@@ -8,8 +8,8 @@ boolean startScreen = true;
 int pillarCoordX[] = {0,0,800,800};
 int pillarCoordZ[] = {0,800,800,0};
 //int cameraCoord[] = {0,0,0};
-float zPOS = 0;
-float xPOS = 0;
+float zPOS = 400;
+float xPOS = 400;
 float zVector = 0;
 float xVector = 0;
 float xANGLE = 0;
@@ -26,12 +26,25 @@ boolean turnLeft = false;
 boolean turnRight = false;
 float yRotation = 0.0;
 int vector = 170;
-
+int boundingBoxCoordX[] = {2000,-2000,0,0,0,0};
+int boundingBoxCoordY[] = {0,0,200,-200,0,0};
+int boundingBoxCoordZ[] = {0,0,0,0,2000,-2000};
+PShape pillar;
+PImage pillarTex;
+PShape boundingBox;
+PImage flooringTex;
 
 void setup () {
     size (1200, 800, P3D);
     xPOS = 0;
     zPOS = height/2;
+    pillarTex = loadImage("irongrate.jpg");
+    pillar = createShape(BOX,200);
+    flooringTex = loadImage("metalfloor.jpg");
+    boundingBox = createShape(BOX,2000,200,2000);
+    boundingBox.setTexture(flooringTex);
+    pillar.setTexture(pillarTex);
+    noFill();
 }
 
 
@@ -44,25 +57,27 @@ void draw () {
         ambientLight(0, 0, 0);
         spotLight(220,220,220,xPOS, height/2, zPOS,xPOS+xVector, height/2, zPOS+zVector, PI/3, 1);
         camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
-        translate(400, height/2, 400);
-        box(2000, 200, 2000);
+        for(int i = 0; i<6; i++){
+        translate(400, (height/2), 400);
+        translate(boundingBoxCoordX[i],boundingBoxCoordY[i],boundingBoxCoordZ[i]);
+        shape(boundingBox);
+        translate(-boundingBoxCoordX[i],-boundingBoxCoordY[i],-boundingBoxCoordZ[i]);
         translate(-400, -(height/2), -400);
+        }
+        noStroke();
         for(int i = 0; i<4; i++){
         translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
-        box(200);
+        shape(pillar);
         translate(-pillarCoordX[i],-(height/2),-pillarCoordZ[i]);
         }
         // translate((xPOS+(30.0*xANGLE)), height/2, (zPOS+(30.0*zANGLE)));
         // box(20);
         // translate(-(xPOS+(30.0*xANGLE)), -height/2, -(zPOS+(30.0*zANGLE)));
-        stroke(255);
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
 
     }
-    
-
 }
 
 
@@ -89,12 +104,24 @@ void movement(){
     println("zVector: ",zVector);
     println("xVector: ",xVector);
     if(Wtrue == true){
+        if(outOfBoundsX(xPOS+xSpeed)||inPillarX(xPOS+xSpeed,zPOS)){
+        }else{
         xPOS+=xSpeed;
+        }
+        if(outOfBoundsZ(zPOS+zSpeed)||inPillarZ(xPOS,zPOS+zSpeed)){
+        }else{
         zPOS+=zSpeed;
+        }
     }
     if(Strue == true){
+        if(outOfBoundsX(xPOS-xSpeed)||inPillarX(xPOS-xSpeed,zPOS)){
+        }else{
         xPOS-=xSpeed;
+        }
+        if(outOfBoundsZ(zPOS-zSpeed)||inPillarZ(xPOS,zPOS-zSpeed)){
+        }else{
         zPOS-=zSpeed;
+        }
     }
     ANGLE=(ANGLE+90.0)%360.0;
     xANGLE =(sin((ANGLE)*PI/180.0));
@@ -102,12 +129,24 @@ void movement(){
     xSpeed = (5.0*xANGLE);
     zSpeed = (5.0*zANGLE);
     if(Atrue == true){
+        if(outOfBoundsX(xPOS+xSpeed)||inPillarX(xPOS+xSpeed,zPOS)){
+        }else{
         xPOS+=xSpeed;
+        }
+        if(outOfBoundsZ(zPOS+zSpeed)||inPillarZ(xPOS,zPOS+zSpeed)){
+        }else{
         zPOS+=zSpeed;
+        }
     }
     if(Dtrue == true){
+        if(outOfBoundsX(xPOS-xSpeed)||inPillarX(xPOS-xSpeed,zPOS)){
+        }else{
         xPOS-=xSpeed;
+        }
+        if(outOfBoundsZ(zPOS-zSpeed)||inPillarZ(xPOS,zPOS-zSpeed)){
+        }else{
         zPOS-=zSpeed;
+        }
     }
     ANGLE=(ANGLE-90.0)%360.0;
 }
@@ -152,4 +191,20 @@ void keyReleased(){
     if(key == 'k'){
         turnRight = false;
     }
+}
+
+boolean outOfBoundsX(float x){
+    return (((x)>=1300)||((x)<=-500));
+}
+
+boolean outOfBoundsZ(float z){
+    return (((z)>=1300)||((z)<=-500));
+}
+
+boolean inPillarX(float x, float z){
+   return (((((x)>=-192)&&(x)<=192)&&((((z>=-192)&&(z<=192)))||(((z)>=613)&&((z)<=997))))||((((x)>=613)&&(x)<=997)&&((((z>=-192)&&(z<=192)))||(((z)>=613)&&((z)<=997)))));
+}
+
+boolean inPillarZ(float x, float z){
+   return (((((z)>=-192)&&(z)<=192)&&((((x>=-192)&&(x<=192)))||(((x)>=613)&&((x)<=997))))||((((z)>=613)&&(z)<=997)&&((((x>=-192)&&(x<=192)))||(((x)>=613)&&((x)<=997)))));
 }
