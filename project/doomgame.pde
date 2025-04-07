@@ -29,12 +29,15 @@ boolean turnRight = false;
 float yRotation = 0.0;
 int vector = 170;
 int boundingBoxCoordX[] = {2000,-2000,0,0,0,0};
-int boundingBoxCoordY[] = {0,0,200,-200,0,0};
-int boundingBoxCoordZ[] = {0,0,0,0,2000,-2000};
+int boundingBoxCoordY[] = {0,0,0,0,200,-200};
+int boundingBoxCoordZ[] = {0,0,2000,-2000,0,0};
 PShape pillar;
 PImage pillarTex;
 PShape boundingBox;
 PImage flooringTex;
+PShape boundingBox2;
+PImage wallTex;
+
 
 void setup () {
     size (1200, 780, P3D);
@@ -44,6 +47,9 @@ void setup () {
     pillar = createShape(BOX,200);
     flooringTex = loadImage("metalfloor.jpg");
     boundingBox = createShape(BOX,2000,200,2000);
+    wallTex = loadImage("metalgrate2.jpg");
+    boundingBox2 = createShape(BOX,2000,200,2000);
+    boundingBox2.setTexture(wallTex);
     boundingBox.setTexture(flooringTex);
     pillar.setTexture(pillarTex);
     noFill();
@@ -53,6 +59,7 @@ void makeEnemy (int xPos, int zPos){
     fill (255, 0, 0);
     translate (xPos, height/2+25, zPos);
     box (65, 150, 65);
+    fill(255,255,255);
     translate(-xPos, -(height/2+25), -zPos);
 }
 
@@ -74,10 +81,15 @@ void draw () {
         for(int i = 0; i<6; i++){
         translate(400, (height/2), 400);
         translate(boundingBoxCoordX[i],boundingBoxCoordY[i],boundingBoxCoordZ[i]);
-        shape(boundingBox);
+        if(i<=3){
+            shape(boundingBox2);
+        }else{
+            shape(boundingBox);
+        }
         translate(-boundingBoxCoordX[i],-boundingBoxCoordY[i],-boundingBoxCoordZ[i]);
         translate(-400, -(height/2), -400);
         }
+
         for(int i = 0; i<4; i++){
         translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
         shape(pillar);
