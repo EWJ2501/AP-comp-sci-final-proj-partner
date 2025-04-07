@@ -40,7 +40,7 @@ void setup () {
     size (1200, 780, P3D);
     xPOS = 0;
     zPOS = height/2;
-        pillarTex = loadImage("irongrate.jpg");
+    pillarTex = loadImage("irongrate.jpg");
     pillar = createShape(BOX,200);
     flooringTex = loadImage("metalfloor.jpg");
     boundingBox = createShape(BOX,2000,200,2000);
