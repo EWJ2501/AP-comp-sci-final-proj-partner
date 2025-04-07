@@ -72,6 +72,9 @@ void makeEnemies (){
 
 void draw () {
     if (startScreen){
+        stroke (500);
+        line (xPOS, height/2, zPOS, xPOS+(xVector*0.001), height/2, zPOS+(zVector*0.001));
+
         background(0);
         lights();
         movement();
@@ -179,23 +182,28 @@ void movement(){
 }
 
 void keyPressed(){
-    if(key == 'w'){
-        Wtrue = true;   
-    }
-    if(key == 's'){
-        Strue = true;
-    }
-    if(key == 'd'){
-        Dtrue = true;
-    }
-    if(key == 'a'){
-        Atrue = true;
-    }
-    if(key == 'j'){
-        turnLeft = true;
-    }
-    if(key == 'k'){
-        turnRight = true;
+    if (startScreen){
+        if (key == ' '){
+
+        }
+        if(key == 'w'){
+            Wtrue = true;   
+        }
+        if(key == 's'){
+            Strue = true;
+        }
+        if(key == 'd'){
+            Dtrue = true;
+        }
+        if(key == 'a'){
+            Atrue = true;
+        }
+        if(key == 'j'){
+            turnLeft = true;
+        }
+        if(key == 'k'){
+            turnRight = true;
+        }
     }
 }
 
