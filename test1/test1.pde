@@ -5,10 +5,19 @@ boolean gameEnd = false;
 boolean startScreen = false;
 
 void setup () {
-    size (1440, 780);
+    size (1200, 780);
 }
 
+void shoot(){
+    if (ammo>0){
+        ammo -= 1;
 
+    } 
+}
+
+void reloadText(){
+
+}
 
 void draw () {
     if (startScreen){
@@ -17,7 +26,7 @@ void draw () {
         rectMode(CENTER);
         strokeWeight(3);
         fill (255);
-        rect (1440/2, 600, 200, 80);
+        rect (1200/2, 600, 200, 80);
 
         textAlign(CENTER);
         fill(0);
@@ -25,20 +34,21 @@ void draw () {
         text ("PLAY", 720, 620);
 
     } else if (!startScreen && ! gameEnd){
+        //
         // UI
         fill(255);
         rectMode (CORNER);
         strokeWeight (10);
-        rect (0, 600, 1440, 180);
+        rect (0, 600, 1200, 180);
 
         // health
         rectMode (CENTER);
         fill (100);
-        rect (720, 690, 300,180);
+        rect (width/2, 690, 300, 180);
         textAlign (CENTER);
         textSize (50);
         fill (0);
-        text ("HEALTH", 720, 660);
+        text ("HEALTH", width/2, 660);
 
         // ammo
         text ("AMMO", 150, 660);
@@ -66,7 +76,11 @@ void mouseClicked () {
 void keyPressed (){
     if (!startScreen && !gameEnd){
         if (key== ' '){
-            
+            if (ammo != 0){
+                shoot();
+            } else {
+                reloadText();
+            }
         }
     }
 }

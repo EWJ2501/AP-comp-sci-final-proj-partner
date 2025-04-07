@@ -4,9 +4,11 @@ int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 //PVector
-
+PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,800,800};
 int pillarCoordZ[] = {0,800,800,0};
+int enemyCoordX[] = {-420,940,800,0};
+int enemyCoordZ[] = {-500,60,640,1200};
 //int cameraCoord[] = {0,0,0};
 float zPOS = 400;
 float xPOS = 400;
@@ -35,10 +37,10 @@ PShape boundingBox;
 PImage flooringTex;
 
 void setup () {
-    size (1200, 800, P3D);
+    size (1200, 780, P3D);
     xPOS = 0;
     zPOS = height/2;
-    pillarTex = loadImage("irongrate.jpg");
+        pillarTex = loadImage("irongrate.jpg");
     pillar = createShape(BOX,200);
     flooringTex = loadImage("metalfloor.jpg");
     boundingBox = createShape(BOX,2000,200,2000);
@@ -47,7 +49,19 @@ void setup () {
     noFill();
 }
 
+void makeEnemy (int xPos, int zPos){
+    fill (255, 0, 0);
+    translate (xPos, height/2+25, zPos);
+    box (65, 150, 65);
+    translate(-xPos, -(height/2+25), -zPos);
+}
 
+void makeEnemies (){
+    for (int i=0; i<4; i++){
+        makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
+    }
+    fill (100);
+}
 
 void draw () {
     if (startScreen){
@@ -64,7 +78,6 @@ void draw () {
         translate(-boundingBoxCoordX[i],-boundingBoxCoordY[i],-boundingBoxCoordZ[i]);
         translate(-400, -(height/2), -400);
         }
-        noStroke();
         for(int i = 0; i<4; i++){
         translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
         shape(pillar);
@@ -73,6 +86,8 @@ void draw () {
         // translate((xPOS+(30.0*xANGLE)), height/2, (zPOS+(30.0*zANGLE)));
         // box(20);
         // translate(-(xPOS+(30.0*xANGLE)), -height/2, -(zPOS+(30.0*zANGLE)));
+        stroke(255);
+        makeEnemies();
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
