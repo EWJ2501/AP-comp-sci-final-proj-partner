@@ -113,12 +113,16 @@ void draw () {
 
     }
 }
-
+float UIX = 0;
+float UIZ = 0;
 void UI(){
-        translate(xPOS, (height/2), zPOS-150);
+        UIZ= 100*xANGLE;
+        UIX= 100*zANGLE;
+        translate(xPOS+UIX, (height/2)+50, zPOS+UIZ);
         rectMode(CENTER);
         rect(0, 0, 200, 40);
-        translate(-(xPOS), -(height/2), -(zPOS-150));
+        rotateY(ANGLE*PI/180);
+        translate(-(xPOS+UIX), -((height/2)+50), -(zPOS+UIZ));
 }
 
 
