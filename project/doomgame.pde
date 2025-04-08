@@ -37,7 +37,7 @@ PShape boundingBox;
 PImage flooringTex;
 PShape boundingBox2;
 PImage wallTex;
-
+PShape bullet1;
 
 void setup () {
     size (1200, 780, P3D);
@@ -52,6 +52,8 @@ void setup () {
     boundingBox2.setTexture(wallTex);
     boundingBox.setTexture(flooringTex);
     pillar.setTexture(pillarTex);
+    bullet1 = loadShape("Bullet.obj");
+    bullet1.scale(500);
     noFill();
 }
 
@@ -59,6 +61,7 @@ void makeEnemy (int xPos, int zPos){
     fill (255, 0, 0);
     translate (xPos, height/2+25, zPos);
     box (65, 150, 65);
+    shape(bullet1);
     fill(255,255,255);
     translate(-xPos, -(height/2+25), -zPos);
 }
@@ -74,7 +77,6 @@ void draw () {
     if (startScreen){
         stroke (500);
         line (xPOS, height/2, zPOS, xPOS+(xVector*0.001), height/2, zPOS+(zVector*0.001));
-
         background(0);
         lights();
         movement();
@@ -103,11 +105,20 @@ void draw () {
         // translate(-(xPOS+(30.0*xANGLE)), -height/2, -(zPOS+(30.0*zANGLE)));
         stroke(255);
         makeEnemies();
+        fill(192);
+        UI();
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
 
     }
+}
+
+void UI(){
+        translate(xPOS, (height/2), zPOS-150);
+        rectMode(CENTER);
+        rect(0, 0, 200, 40);
+        translate(-(xPOS), -(height/2), -(zPOS-150));
 }
 
 
