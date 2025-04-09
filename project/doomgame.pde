@@ -51,7 +51,7 @@ void setup () {
     pillar = createShape(BOX,200);
     flooringTex = loadImage("metalfloor.jpg");
     boundingBox = createShape(BOX,2000,200,2000);
-    wallTex = loadImage("metalgrate2.jpg");
+    wallTex = loadImage("metalgrate3.jpg");
     boundingBox2 = createShape(BOX,2000,200,2000);
     boundingBox2.setTexture(wallTex);
     boundingBox.setTexture(flooringTex);
@@ -101,6 +101,8 @@ void draw () {
         UIlayer.fill(192);
         UI();
         UIlayer.endDraw();
+
+
         image(World, 0, 0);
         image(UIlayer, 0, 0); // This will appear on top
     } else if (!startScreen && ! gameEnd){
@@ -112,10 +114,10 @@ void draw () {
 float UIX = 0;
 float UIZ = 0;
 void UI(){
-        UIlayer.translate(600,760);
+        UIlayer.translate(600,680);
         UIlayer.rectMode(CENTER);
-        UIlayer.rect(0, 0, 200, 40);
-        UIlayer.translate(-600,-760);
+        UIlayer.rect(0, 0, 1200, 200);
+        UIlayer.translate(-600,-680);
 }
 
 void summonPillars(){
