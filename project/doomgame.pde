@@ -38,9 +38,13 @@ PImage flooringTex;
 PShape boundingBox2;
 PImage wallTex;
 PShape bullet1;
+PGraphics World;
+PGraphics UIlayer;
 
 void setup () {
-    size (1200, 780, P3D);
+    size (1200, 780,P3D);
+    World = createGraphics(1200, 780, P3D);
+    UIlayer = createGraphics(1200, 780,P2D);
     xPOS = 0;
     zPOS = height/2;
     pillarTex = loadImage("irongrate.jpg");
@@ -54,59 +58,51 @@ void setup () {
     pillar.setTexture(pillarTex);
     bullet1 = loadShape("Bullet.obj");
     bullet1.scale(500);
-    noFill();
 }
 
 void makeEnemy (int xPos, int zPos){
-    fill (255, 0, 0);
-    translate (xPos, height/2+25, zPos);
-    box (65, 150, 65);
-    shape(bullet1);
-    fill(255,255,255);
-    translate(-xPos, -(height/2+25), -zPos);
+    World.fill (255, 0, 0);
+    World.translate (xPos, height/2+25, zPos);
+    World.box (65, 150, 65);
+    World.shape(bullet1);
+    World.fill(255,255,255);
+    World.translate(-xPos, -(height/2+25), -zPos);
 }
 
 void makeEnemies (){
     for (int i=0; i<4; i++){
         makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
     }
-    fill (100);
+    World.fill (100);
 }
 
 void draw () {
     if (startScreen){
-        stroke (500);
-        line (xPOS, height/2, zPOS, xPOS+(xVector*0.001), height/2, zPOS+(zVector*0.001));
         background(0);
-        lights();
+        World.beginDraw();
+        World.background(0);
+        World.noFill();
+        //World.stroke (500);
+        //World.line (xPOS, height/2, zPOS, xPOS+(xVector*0.001), height/2, zPOS+(zVector*0.001));
+        World.lights();
         movement();
-        ambientLight(0, 0, 0);
-        spotLight(220,220,220,xPOS, height/2, zPOS,xPOS+xVector, height/2, zPOS+zVector, PI/3, 1);
-        camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
-        for(int i = 0; i<6; i++){
-        translate(400, (height/2), 400);
-        translate(boundingBoxCoordX[i],boundingBoxCoordY[i],boundingBoxCoordZ[i]);
-        if(i<=3){
-            shape(boundingBox2);
-        }else{
-            shape(boundingBox);
-        }
-        translate(-boundingBoxCoordX[i],-boundingBoxCoordY[i],-boundingBoxCoordZ[i]);
-        translate(-400, -(height/2), -400);
-        }
-
-        for(int i = 0; i<4; i++){
-        translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
-        shape(pillar);
-        translate(-pillarCoordX[i],-(height/2),-pillarCoordZ[i]);
-        }
-        // translate((xPOS+(30.0*xANGLE)), height/2, (zPOS+(30.0*zANGLE)));
-        // box(20);
-        // translate(-(xPOS+(30.0*xANGLE)), -height/2, -(zPOS+(30.0*zANGLE)));
-        stroke(255);
+        World.ambientLight(0, 0, 0);
+        World.spotLight(220,220,220,xPOS, height/2, zPOS,xPOS+xVector, height/2, zPOS+zVector, PI/3, 1);
+        World.camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
+        summonWalls();
+        summonPillars();
+        //World.stroke(255);
         makeEnemies();
-        fill(192);
+        World.endDraw();
+
+
+        UIlayer.beginDraw();
+        UIlayer.clear(); // allows transparency
+        UIlayer.fill(192);
         UI();
+        UIlayer.endDraw();
+        image(World, 0, 0);
+        image(UIlayer, 0, 0); // This will appear on top
     } else if (!startScreen && ! gameEnd){
 
     } else if (gameEnd){
@@ -116,13 +112,32 @@ void draw () {
 float UIX = 0;
 float UIZ = 0;
 void UI(){
-        UIZ= 100*xANGLE;
-        UIX= 100*zANGLE;
-        translate(xPOS+UIX, (height/2)+50, zPOS+UIZ);
-        rectMode(CENTER);
-        rect(0, 0, 200, 40);
-        rotateY(ANGLE*PI/180);
-        translate(-(xPOS+UIX), -((height/2)+50), -(zPOS+UIZ));
+        UIlayer.translate(600,760);
+        UIlayer.rectMode(CENTER);
+        UIlayer.rect(0, 0, 200, 40);
+        UIlayer.translate(-600,-760);
+}
+
+void summonPillars(){
+    for(int i = 0; i<4; i++){
+        World.translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
+        World.shape(pillar);
+        World.translate(-pillarCoordX[i],-(height/2),-pillarCoordZ[i]);
+        }
+}
+
+void summonWalls(){
+    for(int i = 0; i<6; i++){
+        World.translate(400, (height/2), 400);
+        World.translate(boundingBoxCoordX[i],boundingBoxCoordY[i],boundingBoxCoordZ[i]);
+        if(i<=3){
+            World.shape(boundingBox2);
+        }else{
+            World.shape(boundingBox);
+        }
+        World.translate(-boundingBoxCoordX[i],-boundingBoxCoordY[i],-boundingBoxCoordZ[i]);
+        World.translate(-400, -(height/2), -400);
+        }
 }
 
 
