@@ -40,6 +40,8 @@ PImage wallTex;
 PShape bullet1;
 PGraphics World;
 PGraphics UIlayer;
+PImage gun;
+PFont techyFont;
 
 void setup () {
     size (1200, 780,P3D);
@@ -58,6 +60,9 @@ void setup () {
     pillar.setTexture(pillarTex);
     bullet1 = loadShape("Bullet.obj");
     bullet1.scale(500);
+    gun = loadImage("gun.png");
+    gun.resize(2000,1170);
+    techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
 }
 
 void makeEnemy (int xPos, int zPos){
@@ -111,13 +116,29 @@ void draw () {
 
     }
 }
-float UIX = 0;
-float UIZ = 0;
+
+float walkVal = 0;
+int updown = 1;
 void UI(){
         UIlayer.translate(600,680);
         UIlayer.rectMode(CENTER);
+        UIlayer.noFill();
+        UIlayer.textFont(techyFont);
+        UIlayer.textAlign(CENTER, CENTER);
+        UIlayer.text("aaaa", 0, 0);
         UIlayer.rect(0, 0, 1200, 200);
         UIlayer.translate(-600,-680);
+        if(Wtrue== true||Atrue== true||Strue== true||Dtrue== true){
+            walkVal= walkVal + updown;
+            if (walkVal>=10){
+                updown = -1;
+            }
+            if (walkVal<=-10){
+                updown = 1;
+            }
+        }
+        UIlayer.image(gun,-400,-(300+walkVal));
+        
 }
 
 void summonPillars(){
@@ -152,19 +173,19 @@ void movement(){
     if(turnRight == true){
         ANGLE=(ANGLE-1.0)%360.0;
     }
-    println("degree",ANGLE);
+    //println("degree",ANGLE);
     xANGLE =(sin(ANGLE*PI/180.0));
     zANGLE =(cos(ANGLE*PI/180.0));
     xSpeed = (5.0*xANGLE);
     zSpeed = (5.0*zANGLE);
     xVector = (10000*xANGLE);
     zVector = (10000*zANGLE);
-    println("xSpeed: ",xSpeed);
-    println("zSpeed: ",zSpeed);
-    println("XPos: ",xPOS);
-    println("ZPos: ",zPOS);
-    println("zVector: ",zVector);
-    println("xVector: ",xVector);
+    // println("xSpeed: ",xSpeed);
+    // println("zSpeed: ",zSpeed);
+    // println("XPos: ",xPOS);
+    // println("ZPos: ",zPOS);
+    // println("zVector: ",zVector);
+    // println("xVector: ",xVector);
     if(Wtrue == true){
         if(outOfBoundsX(xPOS+xSpeed)||inPillarX(xPOS+xSpeed,zPOS)){
         }else{
