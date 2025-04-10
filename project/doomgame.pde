@@ -42,9 +42,9 @@ PGraphics World;
 PGraphics UIlayer;
 PImage gun;
 PFont techyFont;
-import java.util.ArrayList; 
-ArrayList<Float> bulletX = new ArrayList<>(); // Create an Array
-ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
+//import java.util.ArrayList; 
+// ArrayList<Float> bulletX = new ArrayList<>(); // Create an Array
+// ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
 
 void setup () {
     size (1200, 780,P3D);
@@ -94,29 +94,29 @@ void makeEnemies (){
     World.fill (100);
 }
 
-    float UIX = 0;
-    float UIZ = 0;
-    float bulletPOSX = 0;
-    float bulletPOSZ = 0;
+    // float UIX = 0;
+    // float UIZ = 0;
+    // float bulletPOSX = 0;
+    // float bulletPOSZ = 0;
 void shoot (){
     ammo -= 1;
-    World.translate(xPOS, (height/2), zPOS-150);
-    UIZ= 100*xANGLE;
-    UIX= 100*zANGLE;
-    World.translate(xPOS+UIX, (height/2)+50, zPOS+UIZ);
-    bulletX.add(bulletPOSX);
-    bulletZ.add(bulletPOSZ);
-    appendBulletCoords();
-    World.shape(bullet1);
-    World.translate(-(xPOS), -(height/2), -(zPOS-150));
-    World.rotateY(ANGLE*PI/180);
-    World.translate(-(xPOS+UIX), -((height/2)+50), -(zPOS+UIZ));
-    World.rotateY(-(ANGLE*PI/180));
+    // World.translate(xPOS, (height/2), zPOS-150);
+    // UIZ= 100*xANGLE;
+    // UIX= 100*zANGLE;
+    // World.translate(xPOS+UIX, (height/2)+50, zPOS+UIZ);
+    // bulletX.add(bulletPOSX);
+    // bulletZ.add(bulletPOSZ);
+    // appendBulletCoords();
+    // World.shape(bullet1);
+    // World.translate(-(xPOS), -(height/2), -(zPOS-150));
+    // World.rotateY(ANGLE*PI/180);
+    // World.translate(-(xPOS+UIX), -((height/2)+50), -(zPOS+UIZ));
+    // World.rotateY(-(ANGLE*PI/180));
 }
 
-void appendBulletCoords(int bulletID){
-    if(bulletPOSX<)
-}
+// void appendBulletCoords(int bulletID){
+//     if(bulletPOSX<)
+// }
 
 void reloadText(){
     UIlayer.fill (255, 0, 0);
@@ -129,11 +129,6 @@ void reloadText(){
 void draw () {
     if (startScreen){
         background(0);
-
-        // for (Ball b : balls) {
-        // b.update();
-        // b.display();
-        // }
         World.beginDraw();
         World.background(0);
         World.noFill();
