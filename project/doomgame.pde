@@ -42,6 +42,9 @@ PGraphics World;
 PGraphics UIlayer;
 PImage gun;
 PFont techyFont;
+import java.util.ArrayList; 
+ArrayList<Float> bulletX = new ArrayList<>(); // Create an Array
+ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
 
 void setup () {
     size (1200, 780,P3D);
@@ -68,6 +71,7 @@ void setup () {
     techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
 }
 
+
 void makeEnemy (int xPos, int zPos){
     World.fill (255, 0, 0);
     World.translate (xPos, height/2+25, zPos);
@@ -90,9 +94,28 @@ void makeEnemies (){
     World.fill (100);
 }
 
+    float UIX = 0;
+    float UIZ = 0;
+    float bulletPOSX = 0;
+    float bulletPOSZ = 0;
 void shoot (){
     ammo -= 1;
+    World.translate(xPOS, (height/2), zPOS-150);
+    UIZ= 100*xANGLE;
+    UIX= 100*zANGLE;
+    World.translate(xPOS+UIX, (height/2)+50, zPOS+UIZ);
+    bulletX.add(bulletPOSX);
+    bulletZ.add(bulletPOSZ);
+    appendBulletCoords();
+    World.shape(bullet1);
+    World.translate(-(xPOS), -(height/2), -(zPOS-150));
+    World.rotateY(ANGLE*PI/180);
+    World.translate(-(xPOS+UIX), -((height/2)+50), -(zPOS+UIZ));
+    World.rotateY(-(ANGLE*PI/180));
+}
 
+void appendBulletCoords(int bulletID){
+    if(bulletPOSX<)
 }
 
 void reloadText(){
@@ -106,6 +129,11 @@ void reloadText(){
 void draw () {
     if (startScreen){
         background(0);
+
+        // for (Ball b : balls) {
+        // b.update();
+        // b.display();
+        // }
         World.beginDraw();
         World.background(0);
         World.noFill();
@@ -125,7 +153,7 @@ void draw () {
 
         UIlayer.beginDraw();
         UIlayer.clear(); // allows transparency
-        UIlayer.fill(192);
+        //UIlayer.fill(192);
         UI();
         UIlayer.endDraw();
         image(World, 0, 0);
@@ -145,7 +173,6 @@ void UI(){
         UIlayer.noFill();
         UIlayer.textFont(techyFont);
         UIlayer.textAlign(CENTER, CENTER);
-        // UIlayer.text("aaaa", 0, 0);
         UIlayer.rect(0, 0, 200, 40);
         UIlayer.translate(-600,-760);
         if(Wtrue== true||Atrue== true||Strue== true||Dtrue== true){
@@ -159,29 +186,29 @@ void UI(){
         }
         UIlayer.image(gun,-400,-(300+walkVal));
 
-        UIlayer.fill(255);
+        //UIlayer.fill(255);
         UIlayer.rectMode (CORNER);
         UIlayer.strokeWeight (10);
-        UIlayer.rect (0, 600, 1200, 180);
+        UIlayer.rect(0, 600, 1200, 180);
 
         // health
         UIlayer.rectMode (CENTER);
-        UIlayer.fill (100);
+        //UIlayer.fill (100);
         UIlayer.rect (width/2, 690, 300, 180);
         UIlayer.textAlign (CENTER);
-        UIlayer.textSize (50);
-        UIlayer.fill (0);
+        UIlayer.textSize (32);
+        UIlayer.fill (255);
         UIlayer.text ("HEALTH", width/2, 660);
 
         // ammo
         UIlayer.text ("AMMO", 170, 660);
-        UIlayer.textSize(70);
+        UIlayer.textSize(50);
         UIlayer.text (ammo + "/32", 170, 740);
 
         if (ammo==0){
             UIlayer.fill (255, 0, 0);
         } else {
-            UIlayer.fill (0);
+            UIlayer.fill (255);
         }
         UIlayer.textSize(40);
         UIlayer.text ("PRESS 'R'", 970, 670);
