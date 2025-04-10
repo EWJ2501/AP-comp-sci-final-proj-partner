@@ -240,7 +240,7 @@ void keyPressed(){
 
         }
         if(key == 'w'){
-            Wtrue = true;   
+            Wtrue = true;
         }
         if(key == 's'){
             Strue = true;
@@ -262,7 +262,7 @@ void keyPressed(){
 
 void keyReleased(){
     if(key == 'w'){
-        Wtrue = false;   
+        Wtrue = false;
     }
     if(key == 's'){
         Strue = false;
