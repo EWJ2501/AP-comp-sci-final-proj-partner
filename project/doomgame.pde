@@ -53,6 +53,9 @@ void setup () {
     pillar = createShape(BOX,200);
     flooringTex = loadImage("metalfloor.jpg");
     boundingBox = createShape(BOX,2000,200,2000);
+    wallTex = loadImage("metalgrate2.jpg");
+    boundingBox2 = createShape(BOX,2000,200,2000);
+    boundingBox2.setTexture(wallTex);
     wallTex = loadImage("metalgrate3.jpg");
     boundingBox2 = createShape(BOX,2000,200,2000);
     boundingBox2.setTexture(wallTex);
@@ -72,12 +75,31 @@ void makeEnemy (int xPos, int zPos){
     World.shape(bullet1);
     World.fill(255,255,255);
     World.translate(-xPos, -(height/2+25), -zPos);
+    World.fill (255, 0, 0);
+    World.translate (xPos, height/2+25, zPos);
+    World.box (65, 150, 65);
+    World.shape(bullet1);
+    World.fill(255,255,255);
+    World.translate(-xPos, -(height/2+25), -zPos);
 }
 
 void makeEnemies (){
     for (int i=0; i<4; i++){
         makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
     }
+    World.fill (100);
+}
+
+void shoot (){
+    ammo -= 1;
+
+}
+
+void reloadText(){
+    UIlayer.fill (255, 0, 0);
+    UIlayer.textSize(40);
+    UIlayer.text ("PRESS 'R'", 970, 670);
+    UIlayer.text ("TO RELOAD", 970, 730);
     World.fill (100);
 }
 
@@ -106,8 +128,6 @@ void draw () {
         UIlayer.fill(192);
         UI();
         UIlayer.endDraw();
-
-
         image(World, 0, 0);
         image(UIlayer, 0, 0); // This will appear on top
     } else if (!startScreen && ! gameEnd){
@@ -120,14 +140,14 @@ void draw () {
 float walkVal = 0;
 int updown = 1;
 void UI(){
-        UIlayer.translate(600,680);
+        UIlayer.translate(600,760);
         UIlayer.rectMode(CENTER);
         UIlayer.noFill();
         UIlayer.textFont(techyFont);
         UIlayer.textAlign(CENTER, CENTER);
-        UIlayer.text("aaaa", 0, 0);
-        UIlayer.rect(0, 0, 1200, 200);
-        UIlayer.translate(-600,-680);
+        // UIlayer.text("aaaa", 0, 0);
+        UIlayer.rect(0, 0, 200, 40);
+        UIlayer.translate(-600,-760);
         if(Wtrue== true||Atrue== true||Strue== true||Dtrue== true){
             walkVal= walkVal + updown;
             if (walkVal>=10){
@@ -138,7 +158,34 @@ void UI(){
             }
         }
         UIlayer.image(gun,-400,-(300+walkVal));
-        
+
+        UIlayer.fill(255);
+        UIlayer.rectMode (CORNER);
+        UIlayer.strokeWeight (10);
+        UIlayer.rect (0, 600, 1200, 180);
+
+        // health
+        UIlayer.rectMode (CENTER);
+        UIlayer.fill (100);
+        UIlayer.rect (width/2, 690, 300, 180);
+        UIlayer.textAlign (CENTER);
+        UIlayer.textSize (50);
+        UIlayer.fill (0);
+        UIlayer.text ("HEALTH", width/2, 660);
+
+        // ammo
+        UIlayer.text ("AMMO", 170, 660);
+        UIlayer.textSize(70);
+        UIlayer.text (ammo + "/32", 170, 740);
+
+        if (ammo==0){
+            UIlayer.fill (255, 0, 0);
+        } else {
+            UIlayer.fill (0);
+        }
+        UIlayer.textSize(40);
+        UIlayer.text ("PRESS 'R'", 970, 670);
+        UIlayer.text ("TO RELOAD", 970, 730);
 }
 
 void summonPillars(){
@@ -236,8 +283,12 @@ void movement(){
 
 void keyPressed(){
     if (startScreen){
-        if (key == ' '){
-
+        if (key== ' '){
+            if (ammo != 0){
+                shoot();
+            } 
+        } else if (key == 'r'){
+            ammo = 32;
         }
         if(key == 'w'){
             Wtrue = true;
