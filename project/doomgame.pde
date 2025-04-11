@@ -1,12 +1,12 @@
-int ammo = 32;
+int ammo = 50;
 int health = 100;
 int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 //PVector
 PMatrix3D baseMat;
-int pillarCoordX[] = {0,0,800,800};
-int pillarCoordZ[] = {0,800,800,0};
+int pillarCoordX[] = {0,0,805,805};
+int pillarCoordZ[] = {0,805,805,0};
 int enemyCoordX[] = {-420,940,800,0};
 int enemyCoordZ[] = {-500,60,640,1200};
 //int cameraCoord[] = {0,0,0};
@@ -24,6 +24,7 @@ boolean Wtrue = false;
 boolean Atrue = false;
 boolean Strue = false;
 boolean Dtrue = false;
+boolean ShootTrue = false;
 boolean turnLeft = false;
 boolean turnRight = false;
 float yRotation = 0.0;
@@ -42,13 +43,16 @@ PGraphics World;
 PGraphics UIlayer;
 PImage gun;
 PFont techyFont;
-//import java.util.ArrayList;
+import java.util.ArrayList;
+import processing.sound.*;
+SoundFile file;
 ArrayList<Float> bulletX = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletXVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletZVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletYangle = new ArrayList<>(); // Create an Array
-
+int coolDown = 125;
+int time;
 
 void setup () {
    size (1200, 780,P3D);
@@ -73,6 +77,8 @@ void setup () {
    gun = loadImage("gun.png");
    gun.resize(2000,1170);
    techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
+   file = new SoundFile(this, "gunFireSound.mp3");
+   time = millis();
 }
 
 
@@ -105,6 +111,7 @@ void makeEnemies (){
    float UIZ = 0;
 void shoot (int bulletID){
    ammo -= 1;
+   file.play(1,0,0,0, 3.0);
    calcSpeeds(((ANGLE)%360.0),20.0);
    UIZ= 100*xANGLE;
    UIX= 100*zANGLE;
@@ -224,7 +231,7 @@ void UI(){
        // ammo
        UIlayer.text ("AMMO", 170, 660);
        UIlayer.textSize(50);
-       UIlayer.text (ammo + "/32", 170, 740);
+       UIlayer.text (ammo + "/50", 170, 740);
 
 
        if (ammo==0){
@@ -263,8 +270,18 @@ void summonWalls(){
 
 
 
-
+int bulletNum = 0;
 void movement(){
+    if(ShootTrue == true){
+        if (ammo != 0){
+            if((millis()-time)>= coolDown){
+               time=millis();
+               bulletNum = bulletX.size();
+               shoot(bulletNum);
+               bulletNum++;
+            }
+           }
+    }
    //fraction = (zANGLE/xANGLE);
    //ANGLE = atan(fraction);
    if(turnLeft == true){
@@ -326,18 +343,12 @@ void movement(){
    }
 }
 
-
-int bulletNum = 0;
 void keyPressed(){
    if (startScreen){
        if (key== ' '){
-           if (ammo != 0){
-               bulletNum = bulletX.size();
-               shoot(bulletNum);
-               bulletNum++;
-           }
+           ShootTrue = true;
        } else if (key == 'r'){
-           ammo = 32;
+           ammo = 50;
        }
        if(key == 'w'){
            Wtrue = true;
@@ -362,6 +373,9 @@ void keyPressed(){
 
 
 void keyReleased(){
+   if (key== ' '){
+       ShootTrue = false;
+   }
    if(key == 'w'){
        Wtrue = false;
    }
@@ -394,13 +408,14 @@ boolean outOfBoundsZ(float z, float MAX, float MIN){
 
 
 boolean inPillarX(float x, float z, float range){
-  return (((((x)>=(pillarCoordX[0]-range))&&(x)<=(pillarCoordX[0]+range))&&((((z>=(pillarCoordZ[0]-range))&&(z<=(pillarCoordZ[0]+range))))||(((z)>=(pillarCoordZ[1]-range))&&((z)<=(pillarCoordZ[1]+range)))))||((((x)>=(pillarCoordX[2]-range))&&(x)<=(pillarCoordX[2]+range))&&((((z>=(pillarCoordZ[3]-range))&&(z<=(pillarCoordZ[3]+range))))||(((z)>=(pillarCoordZ[3]-range))&&((z)<=(pillarCoordZ[3]+range))))));
+  return (((((x)>=(pillarCoordX[0]-range))&&(x)<=(pillarCoordX[0]+range))&&((((z>=(pillarCoordZ[0]-range))&&(z<=(pillarCoordZ[0]+range))))||(((z)>=(pillarCoordZ[1]-range))&&((z)<=(pillarCoordZ[1]+range)))))||((((x)>=(pillarCoordX[2]-range))&&(x)<=(pillarCoordX[2]+range))&&((((z>=(pillarCoordZ[3]-range))&&(z<=(pillarCoordZ[3]+range))))||(((z)>=(pillarCoordZ[2]-range))&&((z)<=(pillarCoordZ[2]+range))))));
 }
 
 
 boolean inPillarZ(float x, float z, float range){
-  return (((((z)>=(pillarCoordZ[0]-range))&&(z)<=(pillarCoordZ[0]+range))&&((((x>=(pillarCoordX[0]-range))&&(x<=(pillarCoordX[0]+range))))||(((x)>=(pillarCoordX[1]-range))&&((x)<=(pillarCoordX[1]+range)))))||((((z)>=(pillarCoordZ[2]-range))&&(z)<=(pillarCoordZ[2]+range))&&((((x>=(pillarCoordX[3]-range))&&(x<=(pillarCoordX[3]+range))))||(((x)>=(pillarCoordX[3]-range))&&((x)<=(pillarCoordX[3]+range))))));
+  return (((((z)>=(pillarCoordZ[0]-range))&&(z)<=(pillarCoordZ[0]+range))&&((((x>=(pillarCoordX[0]-range))&&(x<=(pillarCoordX[0]+range))))||(((x)>=(pillarCoordX[3]-range))&&((x)<=(pillarCoordX[3]+range)))))||((((z)>=(pillarCoordZ[2]-range))&&(z)<=(pillarCoordZ[2]+range))&&((((x>=(pillarCoordX[1]-range))&&(x<=(pillarCoordX[1]+range))))||(((x)>=(pillarCoordX[2]-range))&&((x)<=(pillarCoordX[2]+range))))));
 }
+
 
   
 
