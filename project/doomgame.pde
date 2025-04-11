@@ -9,6 +9,8 @@ int pillarCoordX[] = {0,0,805,805};
 int pillarCoordZ[] = {0,805,805,0};
 int enemyCoordX[] = {-420,940,800,0};
 int enemyCoordZ[] = {-500,60,640,1200};
+int enemyHealth[] = {10,10,10,10};
+int currentEnemy = 0;
 //int cameraCoord[] = {0,0,0};
 float zPOS = 400;
 float xPOS = 400;
@@ -46,15 +48,38 @@ PFont techyFont;
 import java.util.ArrayList;
 import processing.sound.*;
 SoundFile file;
+int coolDown = 125;
+int time;
 ArrayList<Float> bulletX = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletXVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletZVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletYangle = new ArrayList<>(); // Create an Array
-int coolDown = 125;
-int time;
+
 
 void setup () {
+   size (1200, 780,P3D);
+   World = createGraphics(1200, 780, P3D);
+   UIlayer = createGraphics(1200, 780,P2D);
+   xPOS = 0;
+   zPOS = height/2;
+   pillarTex = loadImage("irongrate.jpg");
+   pillar = createShape(BOX,200);
+   flooringTex = loadImage("metalfloor.jpg");
+   boundingBox = createShape(BOX,2000,200,2000);
+   wallTex = loadImage("metalgrate2.jpg");
+   boundingBox2 = createShape(BOX,2000,200,2000);
+   boundingBox2.setTexture(wallTex);
+   wallTex = loadImage("metalgrate3.jpg");
+   boundingBox2 = createShape(BOX,2000,200,2000);
+   boundingBox2.setTexture(wallTex);
+   boundingBox.setTexture(flooringTex);
+   pillar.setTexture(pillarTex);
+   bullet1 = loadShape("Bullet.obj");
+   bullet1.scale(500);
+   gun = loadImage("gun.png");
+   gun.resize(2000,1170);
+   techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
    size (1200, 780,P3D);
    World = createGraphics(1200, 780, P3D);
    UIlayer = createGraphics(1200, 780,P2D);
@@ -84,28 +109,17 @@ void setup () {
 
 
 
-void makeEnemy (int xPos, int zPos){
-   World.fill (255, 0, 0);
-   World.translate (xPos, height/2+25, zPos);
-   World.box (65, 150, 65);
-   World.shape(bullet1);
-   World.fill(255,255,255);
-   World.translate(-xPos, -(height/2+25), -zPos);
-   World.fill (255, 0, 0);
-   World.translate (xPos, height/2+25, zPos);
-   World.box (65, 150, 65);
-   World.fill(255,255,255);
-   World.translate(-xPos, -(height/2+25), -zPos);
+void makeEnemy (int currentEnemy){
+    if (currentEnemy <=3 && currentEnemy >=0){
+        World.fill (255, 0, 0);
+        World.translate (enemyCoordX[currentEnemy], height/2+25, enemyCoordZ[currentEnemy]);
+        World.box (65, 150, 65);
+        World.fill(255,255,255);
+        World.translate(-enemyCoordX[currentEnemy], -(height/2+25), -enemyCoordZ[currentEnemy]);
+    } else if (currentEnemy==4){
+        gameEnd = true;
+    }
 }
-
-
-void makeEnemies (){
-   for (int i=0; i<4; i++){
-       makeEnemy(enemyCoordX[i], enemyCoordZ[i]);
-   }
-   World.fill (100);
-}
-
 
    float UIX = 0;
    float UIZ = 0;
@@ -122,6 +136,27 @@ void shoot (int bulletID){
    bulletYangle.add(ANGLE+90.0);
 }
 
+void detectHit (){
+    if (bulletX.size()>0){
+        for (int i = 0; i<bulletX.size(); i++){
+            if (bulletX.get(i) > enemyCoordX[currentEnemy]-35  && bulletX.get(i) < enemyCoordX[currentEnemy]+35 && bulletZ.get(i) > enemyCoordZ[currentEnemy]-35  && bulletZ.get(i) < enemyCoordZ[currentEnemy]+35){
+                enemyHealth[currentEnemy] -= 1;
+                bulletX.remove(i);
+                bulletZ.remove(i);
+                bulletXVector.remove(i);
+                bulletZVector.remove(i);
+                bulletYangle.remove(i);
+                if (enemyHealth[currentEnemy] == 0){
+                    currentEnemy += 1; 
+                }
+            }
+        }
+    }
+}
+
+// void detectCDmg (){
+//     if (xPOS > enemyCoordX[currentEnemy]-60  && xPOS < enemyCoordX[currentEnemy]+60 && zPOS > enemyCoordZ[currentEnemy]-60  && zPOS < enemyCoordZ[currentEnemy]+60)
+// }
 
 void appendBulletCoords(int bulletID){
    if(!(((outOfBoundsX(bulletX.get(bulletID),1395,-595))||(inPillarX(bulletX.get(bulletID),bulletZ.get(bulletID),105)||((outOfBoundsZ(bulletZ.get(bulletID),1395,-595))||(inPillarZ(bulletZ.get(bulletID),bulletX.get(bulletID),105))))))){
@@ -151,6 +186,7 @@ void reloadText(){
 }
 
 
+
 void draw () {
    if (startScreen){
        background(0);
@@ -164,10 +200,11 @@ void draw () {
        World.camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
        summonWalls();
        summonPillars();
-       makeEnemies();
+       makeEnemy(currentEnemy);
        for(int i = 0; i<bulletX.size(); i++){
        appendBulletCoords(i);
        }
+       detectHit();
        World.endDraw();
 
 
@@ -245,6 +282,7 @@ void UI(){
 }
 
 
+
 void summonPillars(){
    for(int i = 0; i<4; i++){
        World.translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
@@ -252,6 +290,7 @@ void summonPillars(){
        World.translate(-pillarCoordX[i],-(height/2),-pillarCoordZ[i]);
        }
 }
+
 
 
 void summonWalls(){
@@ -267,6 +306,8 @@ void summonWalls(){
        World.translate(-400, -(height/2), -400);
        }
 }
+
+
 
 
 
@@ -343,6 +384,8 @@ void movement(){
    }
 }
 
+
+
 void keyPressed(){
    if (startScreen){
        if (key== ' '){
@@ -370,6 +413,7 @@ void keyPressed(){
        }
    }
 }
+
 
 
 void keyReleased(){
@@ -402,14 +446,17 @@ boolean outOfBoundsX(float x, float MAX, float MIN){
 }
 
 
+
 boolean outOfBoundsZ(float z, float MAX, float MIN){
    return (((z)>=MAX)||((z)<=MIN));
 }
 
 
+
 boolean inPillarX(float x, float z, float range){
   return (((((x)>=(pillarCoordX[0]-range))&&(x)<=(pillarCoordX[0]+range))&&((((z>=(pillarCoordZ[0]-range))&&(z<=(pillarCoordZ[0]+range))))||(((z)>=(pillarCoordZ[1]-range))&&((z)<=(pillarCoordZ[1]+range)))))||((((x)>=(pillarCoordX[2]-range))&&(x)<=(pillarCoordX[2]+range))&&((((z>=(pillarCoordZ[3]-range))&&(z<=(pillarCoordZ[3]+range))))||(((z)>=(pillarCoordZ[2]-range))&&((z)<=(pillarCoordZ[2]+range))))));
 }
+
 
 
 boolean inPillarZ(float x, float z, float range){
