@@ -88,7 +88,6 @@ void makeEnemy (int xPos, int zPos){
    World.fill (255, 0, 0);
    World.translate (xPos, height/2+25, zPos);
    World.box (65, 150, 65);
-   World.shape(bullet1);
    World.fill(255,255,255);
    World.translate(-xPos, -(height/2+25), -zPos);
 }
