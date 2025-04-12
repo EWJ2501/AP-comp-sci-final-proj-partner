@@ -11,6 +11,7 @@ int enemyCoordX[] = {-420,940,800,0};
 int enemyCoordZ[] = {-500,60,640,1200};
 int enemyHealth[] = {10,10,10,10};
 int currentEnemy = 0;
+int time2;
 //int cameraCoord[] = {0,0,0};
 float zPOS = 400;
 float xPOS = 400;
@@ -104,6 +105,7 @@ void setup () {
    techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
    file = new SoundFile(this, "gunFireSound.mp3");
    time = millis();
+   time2 = millis();
 }
 
 
@@ -136,17 +138,17 @@ void shoot (int bulletID){
    bulletYangle.add(ANGLE+90.0);
 }
 
-void detectHit (){
+void detectHit (int e){
     if (bulletX.size()>0){
         for (int i = 0; i<bulletX.size(); i++){
-            if (bulletX.get(i) > enemyCoordX[currentEnemy]-35  && bulletX.get(i) < enemyCoordX[currentEnemy]+35 && bulletZ.get(i) > enemyCoordZ[currentEnemy]-35  && bulletZ.get(i) < enemyCoordZ[currentEnemy]+35){
-                enemyHealth[currentEnemy] -= 1;
+            if (bulletX.get(i) > enemyCoordX[e]-35  && bulletX.get(i) < enemyCoordX[e]+35 && bulletZ.get(i) > enemyCoordZ[e]-35  && bulletZ.get(i) < enemyCoordZ[e]+35){
+                enemyHealth[e] -= 1;
                 bulletX.remove(i);
                 bulletZ.remove(i);
                 bulletXVector.remove(i);
                 bulletZVector.remove(i);
                 bulletYangle.remove(i);
-                if (enemyHealth[currentEnemy] == 0){
+                if (enemyHealth[e] == 0){
                     currentEnemy += 1; 
                 }
             }
@@ -154,9 +156,17 @@ void detectHit (){
     }
 }
 
-// void detectCDmg (){
-//     if (xPOS > enemyCoordX[currentEnemy]-60  && xPOS < enemyCoordX[currentEnemy]+60 && zPOS > enemyCoordZ[currentEnemy]-60  && zPOS < enemyCoordZ[currentEnemy]+60)
-// }
+void detectCDmg (){
+    if (health != 0 && xPOS > enemyCoordX[currentEnemy]-300  && xPOS < enemyCoordX[currentEnemy]+300 && zPOS > enemyCoordZ[currentEnemy]-300  && zPOS < enemyCoordZ[currentEnemy]+300){
+        if (millis()-time2>= 500){
+            time2 = millis();
+            health -= 5;
+            if (health<=0){
+                gameEnd = true;
+            }
+        }
+    }
+}
 
 void appendBulletCoords(int bulletID){
    if(!(((outOfBoundsX(bulletX.get(bulletID),1395,-595))||(inPillarX(bulletX.get(bulletID),bulletZ.get(bulletID),105)||((outOfBoundsZ(bulletZ.get(bulletID),1395,-595))||(inPillarZ(bulletZ.get(bulletID),bulletX.get(bulletID),105))))))){
@@ -204,7 +214,8 @@ void draw () {
        for(int i = 0; i<bulletX.size(); i++){
        appendBulletCoords(i);
        }
-       detectHit();
+       detectHit(currentEnemy);
+       detectCDmg();
        World.endDraw();
 
 
@@ -235,7 +246,6 @@ void UI(){
        UIlayer.noFill();
        UIlayer.textFont(techyFont);
        UIlayer.textAlign(CENTER, CENTER);
-       UIlayer.rect(0, 0, 200, 40);
        UIlayer.translate(-600,-760);
        if(Wtrue== true||Atrue== true||Strue== true||Dtrue== true){
            walkVal= walkVal + updown;
@@ -254,9 +264,26 @@ void UI(){
        UIlayer.strokeWeight (10);
        UIlayer.rect(0, 600, 1200, 180);
 
-
        // health
        UIlayer.rectMode (CENTER);
+       UIlayer.fill (255);
+       UIlayer.strokeWeight (1);
+       UIlayer.rect (width/2, 720, 200, 30);
+
+        if (health > 50){
+            UIlayer.fill(0,200,0);
+        } else if (health <= 50 && health >= 30){
+            UIlayer.fill(200,200,0);
+        } else if (health < 30){
+            UIlayer.fill(200,0,0);
+        }
+       
+       UIlayer.rectMode (CORNER);
+       UIlayer.rect (width/2-96, 709, 192*(health/100.0), 22);
+       UIlayer.strokeWeight (10);
+       UIlayer.noFill();
+       UIlayer.rectMode (CENTER);
+
        //UIlayer.fill (100);
        UIlayer.rect (width/2, 690, 300, 180);
        UIlayer.textAlign (CENTER);
