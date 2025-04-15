@@ -57,21 +57,7 @@ ArrayList<Float> bulletZ = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletXVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletZVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletYangle = new ArrayList<>(); // Create an Array
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ArrayList<Integer> removeBullet = new ArrayList<>(); // Create an Array
 
 void setup () {
    size (1200, 780,P3D);
@@ -101,9 +87,6 @@ void setup () {
    time2 = millis();
 }
 
-
-
-
 void makeEnemy (int currentEnemy){
     if (currentEnemy <=3 && currentEnemy >=0){
         World.fill (255, 0, 0);
@@ -115,9 +98,6 @@ void makeEnemy (int currentEnemy){
         currentEnemy = (currentEnemy +1)%3;
     }
 }
-
-
-
 
 void shoot (int bulletID){
    ammo -= 1;
@@ -131,9 +111,6 @@ void shoot (int bulletID){
    bulletZVector.add(zSpeed);
    bulletYangle.add(ANGLE+90.0);
 }
-
-
-
 
 void detectHit (int e){
     if (bulletX.size()>0){
@@ -153,9 +130,6 @@ void detectHit (int e){
     }
 }
 
-
-
-
 void detectCDmg (){
     if (health != 0 && xPOS > enemyCoordX[currentEnemy]-300  && xPOS < enemyCoordX[currentEnemy]+300 && zPOS > enemyCoordZ[currentEnemy]-300  && zPOS < enemyCoordZ[currentEnemy]+300){
         if (millis()-time2>= 500){
@@ -168,10 +142,8 @@ void detectCDmg (){
     }
 }
 
-
-
-
-void appendBulletCoords(int bulletID){
+void appendBulletCoords(int i){
+for(int bulletID = 0; bulletID<i; bulletID++){
    if(!(((outOfBoundsX(bulletX.get(bulletID),1395,-595))||(inPillarX(bulletX.get(bulletID),bulletZ.get(bulletID),105)||((outOfBoundsZ(bulletZ.get(bulletID),1395,-595))||(inPillarZ(bulletZ.get(bulletID),bulletX.get(bulletID),105))))))){
        bulletX.set(bulletID, bulletX.get(bulletID) + bulletXVector.get(bulletID));
        bulletZ.set(bulletID, bulletZ.get(bulletID) + bulletZVector.get(bulletID));
@@ -181,16 +153,17 @@ void appendBulletCoords(int bulletID){
        World.rotateY(-(bulletYangle.get(bulletID)*PI/180));
        World.translate (-bulletX.get(bulletID), -((height/2)+50), -bulletZ.get(bulletID));
    }else{
-       bulletX.remove(bulletID);
-       bulletZ.remove(bulletID);
-       bulletXVector.remove(bulletID);
-       bulletZVector.remove(bulletID);
-       bulletYangle.remove(bulletID);
+     removeBullet.add(bulletID);
    }
 }
-
-
-
+   for(int s = 0; s<removeBullet.size(); s++){
+    bulletX.remove(removeBullet.get(s));
+    bulletZ.remove(removeBullet.get(s));
+    bulletXVector.remove(removeBullet.get(s));
+    bulletZVector.remove(removeBullet.get(s));
+    bulletYangle.remove(removeBullet.get(s));
+   }
+}
 
 void reloadText(){
    UIlayer.fill (255, 0, 0);
@@ -199,9 +172,6 @@ void reloadText(){
    UIlayer.text ("TO RELOAD", 970, 730);
    World.fill (100);
 }
-
-
-
 
 void draw () {
    if (startScreen){
@@ -236,8 +206,8 @@ void draw () {
        summonWalls();
        summonPillars();
        makeEnemy(currentEnemy);
-       for(int i = 0; i<bulletX.size(); i++){
-       appendBulletCoords(i);
+       if(bulletX.size()>0){
+          appendBulletCoords(bulletX.size());
        }
        detectHit(currentEnemy);
        detectCDmg();
@@ -295,17 +265,11 @@ void UI(){
        UIlayer.strokeWeight (10);
        UIlayer.rect(0, 600, 1200, 180);
 
-
-
-
        // health
        UIlayer.rectMode (CENTER);
        UIlayer.fill (255);
        UIlayer.strokeWeight (1);
        UIlayer.rect (width/2, 720, 200, 30);
-
-
-
 
         if (health > 50){
             UIlayer.fill(0,200,0);
