@@ -1,9 +1,9 @@
+ 
 int ammo = 50;
 int health = 100;
 int numEnemies = 3;
 boolean gameEnd = false;
-boolean startScreen = true;
-//PVector
+boolean startScreen = false;
 PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,805,805};
 int pillarCoordZ[] = {0,805,805,0};
@@ -12,7 +12,6 @@ int enemyCoordZ[] = {-500,60,640,1200};
 int enemyHealth[] = {10,10,10,10};
 int currentEnemy = 0;
 int time2;
-//int cameraCoord[] = {0,0,0};
 float zPOS = 400;
 float xPOS = 400;
 float zVector = 0;
@@ -23,6 +22,8 @@ float ANGLE = 180;
 float fraction = 0.0;
 float xSpeed = 5;
 float zSpeed = 5;
+float UIX = 0;
+float UIZ = 0;
 boolean Wtrue = false;
 boolean Atrue = false;
 boolean Strue = false;
@@ -58,29 +59,21 @@ ArrayList<Float> bulletZVector = new ArrayList<>(); // Create an Array
 ArrayList<Float> bulletYangle = new ArrayList<>(); // Create an Array
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void setup () {
-   size (1200, 780,P3D);
-   World = createGraphics(1200, 780, P3D);
-   UIlayer = createGraphics(1200, 780,P2D);
-   xPOS = 0;
-   zPOS = height/2;
-   pillarTex = loadImage("irongrate.jpg");
-   pillar = createShape(BOX,200);
-   flooringTex = loadImage("metalfloor.jpg");
-   boundingBox = createShape(BOX,2000,200,2000);
-   wallTex = loadImage("metalgrate2.jpg");
-   boundingBox2 = createShape(BOX,2000,200,2000);
-   boundingBox2.setTexture(wallTex);
-   wallTex = loadImage("metalgrate3.jpg");
-   boundingBox2 = createShape(BOX,2000,200,2000);
-   boundingBox2.setTexture(wallTex);
-   boundingBox.setTexture(flooringTex);
-   pillar.setTexture(pillarTex);
-   bullet1 = loadShape("Bullet.obj");
-   bullet1.scale(500);
-   gun = loadImage("gun.png");
-   gun.resize(2000,1170);
-   techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
    size (1200, 780,P3D);
    World = createGraphics(1200, 780, P3D);
    UIlayer = createGraphics(1200, 780,P2D);
@@ -119,12 +112,13 @@ void makeEnemy (int currentEnemy){
         World.fill(255,255,255);
         World.translate(-enemyCoordX[currentEnemy], -(height/2+25), -enemyCoordZ[currentEnemy]);
     } else if (currentEnemy==4){
-        gameEnd = true;
+        currentEnemy = (currentEnemy +1)%3;
     }
 }
 
-   float UIX = 0;
-   float UIZ = 0;
+
+
+
 void shoot (int bulletID){
    ammo -= 1;
    file.play(1,0,0,0, 3.0);
@@ -138,6 +132,9 @@ void shoot (int bulletID){
    bulletYangle.add(ANGLE+90.0);
 }
 
+
+
+
 void detectHit (int e){
     if (bulletX.size()>0){
         for (int i = 0; i<bulletX.size(); i++){
@@ -149,12 +146,15 @@ void detectHit (int e){
                 bulletZVector.remove(i);
                 bulletYangle.remove(i);
                 if (enemyHealth[e] == 0){
-                    currentEnemy += 1; 
+                    currentEnemy = (currentEnemy +1)%3;
                 }
             }
         }
     }
 }
+
+
+
 
 void detectCDmg (){
     if (health != 0 && xPOS > enemyCoordX[currentEnemy]-300  && xPOS < enemyCoordX[currentEnemy]+300 && zPOS > enemyCoordZ[currentEnemy]-300  && zPOS < enemyCoordZ[currentEnemy]+300){
@@ -167,6 +167,9 @@ void detectCDmg (){
         }
     }
 }
+
+
+
 
 void appendBulletCoords(int bulletID){
    if(!(((outOfBoundsX(bulletX.get(bulletID),1395,-595))||(inPillarX(bulletX.get(bulletID),bulletZ.get(bulletID),105)||((outOfBoundsZ(bulletZ.get(bulletID),1395,-595))||(inPillarZ(bulletZ.get(bulletID),bulletX.get(bulletID),105))))))){
@@ -187,6 +190,8 @@ void appendBulletCoords(int bulletID){
 }
 
 
+
+
 void reloadText(){
    UIlayer.fill (255, 0, 0);
    UIlayer.textSize(40);
@@ -197,8 +202,28 @@ void reloadText(){
 
 
 
+
 void draw () {
    if (startScreen){
+      //section does not work
+       //UIlayer.beginDraw();
+       //background(0);
+       //UIlayer.textAlign (CENTER);
+       //UIlayer.textSize (100);
+       //UIlayer.fill(255,0,0);
+       //UIlayer.text("PRESS ANY KEY TO START”, width/2, height-100);
+       //UIlayer.fill(255,255,0);
+       //UIlayer.textSize (70);
+       //UIlayer.text(“MOVEMENT: W, A, S, D”, width/2, height-400);
+       //UIlayer.text(“CAMERA: J, K”, width/2, height-300);
+       //UIlayer.text(“SHOOT: SPACE”, width/2, height-200);
+       //UIlayer.endDraw();
+       //image(UIlayer, 0, 0);
+
+
+
+
+   } else if (!startScreen && ! gameEnd){
        background(0);
        World.beginDraw();
        World.background(0);
@@ -218,24 +243,28 @@ void draw () {
        detectCDmg();
        World.endDraw();
 
-
-
-
        UIlayer.beginDraw();
-       UIlayer.clear(); // allows transparency
-       //UIlayer.fill(192);
+       UIlayer.clear();
        UI();
        UIlayer.endDraw();
        image(World, 0, 0);
-       image(UIlayer, 0, 0); // This will appear on top
-   } else if (!startScreen && ! gameEnd){
-
+       image(UIlayer, 0, 0);
 
    } else if (gameEnd){
-
-
+       //UIlayer.beginDraw();
+       //UIlayer.textSize(120);
+       //UIlayer.textAlign(CENTER);
+       //if (health==0){
+       //    UIlayer.text(“YOU LOST”, width/2, height/2-100);
+       //} else if (currentEnemy==4){
+       //    UIlayer.text(“YOU WON”, width/2, height/2+100);
+       //}
+       //UIlayer.endDraw();
+       //image(UIlayer, 0, 0);
    }
 }
+
+
 
 
 float walkVal = 0;
@@ -248,7 +277,7 @@ void UI(){
        UIlayer.textAlign(CENTER, CENTER);
        UIlayer.translate(-600,-760);
        if(Wtrue== true||Atrue== true||Strue== true||Dtrue== true){
-           walkVal= walkVal + updown;
+           walkVal = walkVal + updown;
            if (walkVal>=10){
                updown = -1;
            }
@@ -259,16 +288,24 @@ void UI(){
        UIlayer.image(gun,-400,-(300+walkVal));
 
 
+
+
        //UIlayer.fill(255);
        UIlayer.rectMode (CORNER);
        UIlayer.strokeWeight (10);
        UIlayer.rect(0, 600, 1200, 180);
+
+
+
 
        // health
        UIlayer.rectMode (CENTER);
        UIlayer.fill (255);
        UIlayer.strokeWeight (1);
        UIlayer.rect (width/2, 720, 200, 30);
+
+
+
 
         if (health > 50){
             UIlayer.fill(0,200,0);
@@ -284,7 +321,9 @@ void UI(){
        UIlayer.noFill();
        UIlayer.rectMode (CENTER);
 
-       //UIlayer.fill (100);
+
+
+
        UIlayer.rect (width/2, 690, 300, 180);
        UIlayer.textAlign (CENTER);
        UIlayer.textSize (32);
@@ -292,10 +331,13 @@ void UI(){
        UIlayer.text ("HEALTH", width/2, 660);
 
 
-       // ammo
+
+
        UIlayer.text ("AMMO", 170, 660);
        UIlayer.textSize(50);
        UIlayer.text (ammo + "/50", 170, 740);
+
+
 
 
        if (ammo==0){
@@ -310,6 +352,7 @@ void UI(){
 
 
 
+
 void summonPillars(){
    for(int i = 0; i<4; i++){
        World.translate(pillarCoordX[i], height/2, pillarCoordZ[i]);
@@ -317,6 +360,7 @@ void summonPillars(){
        World.translate(-pillarCoordX[i],-(height/2),-pillarCoordZ[i]);
        }
 }
+
 
 
 
@@ -337,7 +381,6 @@ void summonWalls(){
 
 
 
-
 int bulletNum = 0;
 void movement(){
     if(ShootTrue == true){
@@ -350,8 +393,6 @@ void movement(){
             }
            }
     }
-   //fraction = (zANGLE/xANGLE);
-   //ANGLE = atan(fraction);
    if(turnLeft == true){
        ANGLE=(ANGLE+1.0)%360.0;
    }
@@ -413,8 +454,9 @@ void movement(){
 
 
 
+
 void keyPressed(){
-   if (startScreen){
+   if (!startScreen && !gameEnd){
        if (key== ' '){
            ShootTrue = true;
        } else if (key == 'r'){
@@ -438,8 +480,35 @@ void keyPressed(){
        if(key == 'k'){
            turnRight = true;
        }
+   } else if (startScreen){
+       startScreen = false;
+
+
+
+
+
+
+
+
+   } else if (gameEnd){
+    //section does not work
+       gameEnd = false;
+       ammo = 50;
+       health = 100;
+       currentEnemy = 0;
+       xPOS = 400;
+       zPOS = 400;
+       zVector = 0;
+       xVector = 0;
+       xANGLE = 0;
+       zANGLE = 0;
+       ANGLE = 180;
+       for(int i=0; i<3; i++){
+           enemyHealth[i] = 10;
+       }
    }
 }
+
 
 
 
@@ -468,9 +537,12 @@ void keyReleased(){
 }
 
 
+
+
 boolean outOfBoundsX(float x, float MAX, float MIN){
    return (((x)>=MAX)||((x)<=MIN));
 }
+
 
 
 
@@ -480,9 +552,11 @@ boolean outOfBoundsZ(float z, float MAX, float MIN){
 
 
 
+
 boolean inPillarX(float x, float z, float range){
   return (((((x)>=(pillarCoordX[0]-range))&&(x)<=(pillarCoordX[0]+range))&&((((z>=(pillarCoordZ[0]-range))&&(z<=(pillarCoordZ[0]+range))))||(((z)>=(pillarCoordZ[1]-range))&&((z)<=(pillarCoordZ[1]+range)))))||((((x)>=(pillarCoordX[2]-range))&&(x)<=(pillarCoordX[2]+range))&&((((z>=(pillarCoordZ[3]-range))&&(z<=(pillarCoordZ[3]+range))))||(((z)>=(pillarCoordZ[2]-range))&&((z)<=(pillarCoordZ[2]+range))))));
 }
+
 
 
 
@@ -491,7 +565,7 @@ boolean inPillarZ(float x, float z, float range){
 }
 
 
-  
+
 
 void calcSpeeds(float ANGLE, float Speed){
    xANGLE =(sin((ANGLE)*PI/180.0));
