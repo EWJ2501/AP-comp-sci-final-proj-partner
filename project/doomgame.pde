@@ -325,9 +325,6 @@ void summonPillars(){
        }
 }
 
-
-
-
 void summonWalls(){
    for(int i = 0; i<6; i++){
        World.translate(400, (height/2), 400);
@@ -341,9 +338,6 @@ void summonWalls(){
        World.translate(-400, -(height/2), -400);
        }
 }
-
-
-
 
 int bulletNum = 0;
 void movement(){
@@ -507,29 +501,17 @@ boolean outOfBoundsX(float x, float MAX, float MIN){
    return (((x)>=MAX)||((x)<=MIN));
 }
 
-
-
-
 boolean outOfBoundsZ(float z, float MAX, float MIN){
    return (((z)>=MAX)||((z)<=MIN));
 }
-
-
-
 
 boolean inPillarX(float x, float z, float range){
   return (((((x)>=(pillarCoordX[0]-range))&&(x)<=(pillarCoordX[0]+range))&&((((z>=(pillarCoordZ[0]-range))&&(z<=(pillarCoordZ[0]+range))))||(((z)>=(pillarCoordZ[1]-range))&&((z)<=(pillarCoordZ[1]+range)))))||((((x)>=(pillarCoordX[2]-range))&&(x)<=(pillarCoordX[2]+range))&&((((z>=(pillarCoordZ[3]-range))&&(z<=(pillarCoordZ[3]+range))))||(((z)>=(pillarCoordZ[2]-range))&&((z)<=(pillarCoordZ[2]+range))))));
 }
 
-
-
-
 boolean inPillarZ(float x, float z, float range){
   return (((((z)>=(pillarCoordZ[0]-range))&&(z)<=(pillarCoordZ[0]+range))&&((((x>=(pillarCoordX[0]-range))&&(x<=(pillarCoordX[0]+range))))||(((x)>=(pillarCoordX[3]-range))&&((x)<=(pillarCoordX[3]+range)))))||((((z)>=(pillarCoordZ[2]-range))&&(z)<=(pillarCoordZ[2]+range))&&((((x>=(pillarCoordX[1]-range))&&(x<=(pillarCoordX[1]+range))))||(((x)>=(pillarCoordX[2]-range))&&((x)<=(pillarCoordX[2]+range))))));
 }
-
-
-
 
 void calcSpeeds(float ANGLE, float Speed){
    xANGLE =(sin((ANGLE)*PI/180.0));
