@@ -3,7 +3,7 @@ int ammo = 50;
 int health = 100;
 int numEnemies = 3;
 boolean gameEnd = false;
-boolean startScreen = false;
+boolean startScreen = true;
 PMatrix3D baseMat;
 int pillarCoordX[] = {0,0,805,805};
 int pillarCoordZ[] = {0,805,805,0};
@@ -88,15 +88,13 @@ void setup () {
 }
 
 void makeEnemy (int currentEnemy){
-    if (currentEnemy <=3 && currentEnemy >=0){
+    if (currentEnemy <4 && currentEnemy >=0){
         World.fill (255, 0, 0);
         World.translate (enemyCoordX[currentEnemy], height/2+25, enemyCoordZ[currentEnemy]);
         World.box (65, 150, 65);
         World.fill(255,255,255);
         World.translate(-enemyCoordX[currentEnemy], -(height/2+25), -enemyCoordZ[currentEnemy]);
-    } else if (currentEnemy==4){
-        currentEnemy = (currentEnemy +1)%3;
-    }
+    } 
 }
 
 void shoot (int bulletID){
@@ -123,7 +121,7 @@ void detectHit (int e){
                 bulletZVector.remove(i);
                 bulletYangle.remove(i);
                 if (enemyHealth[e] == 0){
-                    currentEnemy = (currentEnemy +1)%3;
+                    currentEnemy+=1;
                 }
             }
         }
@@ -165,32 +163,40 @@ for(int bulletID = 0; bulletID<i; bulletID++){
    }
 }
 
-void reloadText(){
-   UIlayer.fill (255, 0, 0);
-   UIlayer.textSize(40);
-   UIlayer.text ("PRESS 'R'", 970, 670);
-   UIlayer.text ("TO RELOAD", 970, 730);
-   World.fill (100);
+
+void gameReset(){
+    gameEnd = false;
+    ammo = 50;
+    health = 100;
+    currentEnemy = 0;
+    xPOS = 400;
+    zPOS = 400;
+    zVector = 0;
+    xVector = 0;
+    xANGLE = 0;
+    zANGLE = 0;
+    ANGLE = 180;
+    for(int i=0; i<4; i++){
+       enemyHealth[i] = 10;
+    }
 }
+
 
 void draw () {
    if (startScreen){
-      //section does not work
-       //UIlayer.beginDraw();
-       //background(0);
-       //UIlayer.textAlign (CENTER);
-       //UIlayer.textSize (100);
-       //UIlayer.fill(255,0,0);
-       //UIlayer.text("PRESS ANY KEY TO START”, width/2, height-100);
-       //UIlayer.fill(255,255,0);
-       //UIlayer.textSize (70);
-       //UIlayer.text(“MOVEMENT: W, A, S, D”, width/2, height-400);
-       //UIlayer.text(“CAMERA: J, K”, width/2, height-300);
-       //UIlayer.text(“SHOOT: SPACE”, width/2, height-200);
-       //UIlayer.endDraw();
-       //image(UIlayer, 0, 0);
-
-
+       UIlayer.beginDraw();
+       background(0);
+       UIlayer.textAlign (CENTER);
+       UIlayer.textSize (100);
+       UIlayer.fill(255,0,0);
+       UIlayer.text("PRESS ANY KEY TO START", width/2, height-100);
+       UIlayer.fill(255,255,0);
+       UIlayer.textSize (70);
+       UIlayer.text("MOVEMENT: W, A, S, D", width/2, height-400);
+       UIlayer.text("CAMERA: J, K", width/2, height-300);
+       UIlayer.text("SHOOT: SPACE", width/2, height-200);
+       UIlayer.endDraw();
+       image(UIlayer, 0, 0);
 
 
    } else if (!startScreen && ! gameEnd){
@@ -205,12 +211,22 @@ void draw () {
        World.camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
        summonWalls();
        summonPillars();
-       makeEnemy(currentEnemy);
+       
        if(bulletX.size()>0){
           appendBulletCoords(bulletX.size());
        }
-       detectHit(currentEnemy);
-       detectCDmg();
+       if (currentEnemy<4){
+         makeEnemy(currentEnemy);
+       }
+       if (currentEnemy<4){
+        detectHit(currentEnemy);
+       }
+       if (currentEnemy<4){
+        detectCDmg();
+       }
+       else {
+        gameEnd = true;
+       }
        World.endDraw();
 
        UIlayer.beginDraw();
@@ -221,20 +237,23 @@ void draw () {
        image(UIlayer, 0, 0);
 
    } else if (gameEnd){
-       //UIlayer.beginDraw();
-       //UIlayer.textSize(120);
-       //UIlayer.textAlign(CENTER);
-       //if (health==0){
-       //    UIlayer.text(“YOU LOST”, width/2, height/2-100);
-       //} else if (currentEnemy==4){
-       //    UIlayer.text(“YOU WON”, width/2, height/2+100);
-       //}
-       //UIlayer.endDraw();
-       //image(UIlayer, 0, 0);
+       UIlayer.beginDraw();
+       UIlayer.background(0);
+       UIlayer.textSize(120);
+       UIlayer.textAlign(CENTER);
+       if (health==0){
+          UIlayer.text("YOU LOST", width/2, height/2-100);
+          UIlayer.textSize(50);
+          UIlayer.text("PRESS ANY KEY TO TRY AGAIN", width/2, height/2+150);
+       } else if (currentEnemy==4){
+          UIlayer.text("YOU WON", width/2, height/2-100);
+          UIlayer.textSize(50);
+          UIlayer.text("PRESS ANY KEY TO PLAY AGAIN", width/2, height/2+150);
+       }
+       UIlayer.endDraw();
+       image(UIlayer, 0, 0);
    }
 }
-
-
 
 
 float walkVal = 0;
@@ -258,9 +277,6 @@ void UI(){
        UIlayer.image(gun,-400,-(300+walkVal));
 
 
-
-
-       //UIlayer.fill(255);
        UIlayer.rectMode (CORNER);
        UIlayer.strokeWeight (10);
        UIlayer.rect(0, 600, 1200, 180);
@@ -274,7 +290,7 @@ void UI(){
         if (health > 50){
             UIlayer.fill(0,200,0);
         } else if (health <= 50 && health >= 30){
-            UIlayer.fill(200,200,0);
+            UIlayer.fill(255,255,0);
         } else if (health < 30){
             UIlayer.fill(200,0,0);
         }
@@ -286,8 +302,6 @@ void UI(){
        UIlayer.rectMode (CENTER);
 
 
-
-
        UIlayer.rect (width/2, 690, 300, 180);
        UIlayer.textAlign (CENTER);
        UIlayer.textSize (32);
@@ -295,13 +309,9 @@ void UI(){
        UIlayer.text ("HEALTH", width/2, 660);
 
 
-
-
        UIlayer.text ("AMMO", 170, 660);
        UIlayer.textSize(50);
        UIlayer.text (ammo + "/50", 170, 740);
-
-
 
 
        if (ammo==0){
@@ -313,8 +323,6 @@ void UI(){
        UIlayer.text ("PRESS 'R'", 970, 670);
        UIlayer.text ("TO RELOAD", 970, 730);
 }
-
-
 
 
 void summonPillars(){
@@ -411,8 +419,6 @@ void movement(){
 }
 
 
-
-
 void keyPressed(){
    if (!startScreen && !gameEnd){
        if (key== ' '){
@@ -440,34 +446,10 @@ void keyPressed(){
        }
    } else if (startScreen){
        startScreen = false;
-
-
-
-
-
-
-
-
    } else if (gameEnd){
-    //section does not work
-       gameEnd = false;
-       ammo = 50;
-       health = 100;
-       currentEnemy = 0;
-       xPOS = 400;
-       zPOS = 400;
-       zVector = 0;
-       xVector = 0;
-       xANGLE = 0;
-       zANGLE = 0;
-       ANGLE = 180;
-       for(int i=0; i<3; i++){
-           enemyHealth[i] = 10;
-       }
+       gameReset();
    }
 }
-
-
 
 
 void keyReleased(){
@@ -495,8 +477,6 @@ void keyReleased(){
 }
 
 
-
-
 boolean outOfBoundsX(float x, float MAX, float MIN){
    return (((x)>=MAX)||((x)<=MIN));
 }
@@ -519,6 +499,3 @@ void calcSpeeds(float ANGLE, float Speed){
    xSpeed = (Speed*xANGLE);
    zSpeed = (Speed*zANGLE);
 }
-
-
-
