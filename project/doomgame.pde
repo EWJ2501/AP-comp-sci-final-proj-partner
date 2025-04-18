@@ -1,7 +1,5 @@
- 
 int ammo = 50;
 int health = 100;
-int numEnemies = 3;
 boolean gameEnd = false;
 boolean startScreen = true;
 PMatrix3D baseMat;
@@ -83,8 +81,6 @@ void setup () {
    gun.resize(2000,1170);
    techyFont = createFont("MinasansItalic-7OmmP.otf", 48);
    file = new SoundFile(this, "gunFireSound.mp3");
-   time = millis();
-   time2 = millis();
 }
 
 void makeEnemy (int currentEnemy){
@@ -140,6 +136,25 @@ void detectCDmg (){
     }
 }
 
+
+void gameReset(){
+    gameEnd = false;
+    ammo = 50;
+    health = 100;
+    currentEnemy = 0;
+    xPOS = 400;
+    zPOS = 400;
+    zVector = 0;
+    xVector = 0;
+    xANGLE = 0;
+    zANGLE = 0;
+    ANGLE = 180;
+    for(int i=0; i<4; i++){
+       enemyHealth[i] = 10;
+    }
+}
+
+
 void appendBulletCoords(int i){
 for(int bulletID = 0; bulletID<i; bulletID++){
    if(!(((outOfBoundsX(bulletX.get(bulletID),1395,-595))||(inPillarX(bulletX.get(bulletID),bulletZ.get(bulletID),105)||((outOfBoundsZ(bulletZ.get(bulletID),1395,-595))||(inPillarZ(bulletZ.get(bulletID),bulletX.get(bulletID),105))))))){
@@ -161,24 +176,6 @@ for(int bulletID = 0; bulletID<i; bulletID++){
     bulletZVector.remove(removeBullet.get(s));
     bulletYangle.remove(removeBullet.get(s));
    }
-}
-
-
-void gameReset(){
-    gameEnd = false;
-    ammo = 50;
-    health = 100;
-    currentEnemy = 0;
-    xPOS = 400;
-    zPOS = 400;
-    zVector = 0;
-    xVector = 0;
-    xANGLE = 0;
-    zANGLE = 0;
-    ANGLE = 180;
-    for(int i=0; i<4; i++){
-       enemyHealth[i] = 10;
-    }
 }
 
 
