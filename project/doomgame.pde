@@ -90,7 +90,7 @@ void makeEnemy (int currentEnemy){
         World.box (65, 150, 65);
         World.fill(255,255,255);
         World.translate(-enemyCoordX[currentEnemy], -(height/2+25), -enemyCoordZ[currentEnemy]);
-    } 
+    }
 }
 
 void shoot (int bulletID){
@@ -208,7 +208,7 @@ void draw () {
        World.camera(xPOS, height/2, zPOS, xPOS+xVector, height/2, zPOS+zVector, 0, 1, 0);
        summonWalls();
        summonPillars();
-       
+
        if(bulletX.size()>0){
           appendBulletCoords(bulletX.size());
        }
@@ -291,7 +291,7 @@ void UI(){
         } else if (health < 30){
             UIlayer.fill(200,0,0);
         }
-       
+
        UIlayer.rectMode (CORNER);
        UIlayer.rect (width/2-96, 709, 192*(health/100.0), 22);
        UIlayer.strokeWeight (10);
