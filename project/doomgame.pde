@@ -109,7 +109,8 @@ void shoot (int bulletID){
 void detectHit (int e){
     if (bulletX.size()>0){
         for (int i = 0; i<bulletX.size(); i++){
-            if (bulletX.get(i) > enemyCoordX[e]-35  && bulletX.get(i) < enemyCoordX[e]+35 && bulletZ.get(i) > enemyCoordZ[e]-35  && bulletZ.get(i) < enemyCoordZ[e]+35){
+            if (bulletX.get(i) > enemyCoordX[e]-35  && bulletX.get(i) < enemyCoordX[e]+35 
+               && bulletZ.get(i) > enemyCoordZ[e]-35  && bulletZ.get(i) < enemyCoordZ[e]+35){
                 enemyHealth[e] -= 1;
                 bulletX.remove(i);
                 bulletZ.remove(i);
